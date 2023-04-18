@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServerTCP", "ServerTCP\Serv
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClientTCP", "ClientTCP\ClientTCP.csproj", "{96FD8C7C-C251-403F-8468-1C22194CA464}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighPerformanceTCP", "HighPerformanceTCP\HighPerformanceTCP.csproj", "{C69E21B6-FCA5-4556-A92B-64594DB092AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{96FD8C7C-C251-403F-8468-1C22194CA464}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96FD8C7C-C251-403F-8468-1C22194CA464}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96FD8C7C-C251-403F-8468-1C22194CA464}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C69E21B6-FCA5-4556-A92B-64594DB092AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C69E21B6-FCA5-4556-A92B-64594DB092AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C69E21B6-FCA5-4556-A92B-64594DB092AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C69E21B6-FCA5-4556-A92B-64594DB092AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

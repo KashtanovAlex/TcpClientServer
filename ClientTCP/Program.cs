@@ -1,45 +1,35 @@
 ﻿using System.Net.Sockets;
 using System.Text;
+using HighPerformanceTCP;
 
-// слова для отправки для получения перевода
-//var words = new string[] { "red", "yellow", "blue", "green" };
-
-var word = string.Empty;
-for (int i = 0; i < 100000; i++)
-{
-    word += "TestingBigstring" + i + "TestingBigstring" + "TestingBigstring";
-}
+var word = "salam";
 
 
 Console.WriteLine("Длина сообщения = " + word.Length);
 
 
-using TcpClient tcpClient = new TcpClient();
-await tcpClient.ConnectAsync("127.0.0.1", 8888);
-var stream = tcpClient.GetStream();
+var client = await HPTcp.ClientConnectAsync();
+var stream = client.GetStream();
 
-// буфер для входящих данных
+await HPTcp.SendMessageAsync(Convert.ToByte(0x03), word, stream);
+
+// получение заголовка
 var response = new List<byte>();
-int bytesRead = 10; // для считывания байтов из потока
-
-
-// считываем строку в массив байтов
-// при отправке добавляем маркер завершения сообщения - \n
-byte[] data = Encoding.UTF8.GetBytes(word + '\n');
-// отправляем данные
-await stream.WriteAsync(data);
-
-// считываем данные до конечного символа
-while ((bytesRead = stream.ReadByte()) != '\n')
+while (response.Count() <= 6)
 {
-    // добавляем в буфер
-    response.Add((byte)bytesRead);
+    response.Add((byte)(stream.ReadByte()));
 }
+
+int messageLenght = Convert.ToInt32(new byte[]{response[5], response[4], response[3], response[2]});
+while (response.Count() <= messageLenght)
+{
+    response.Add((byte)(stream.ReadByte()));
+}
+
+
 var translation = Encoding.UTF8.GetString(response.ToArray());
-Console.WriteLine($"Слово {word}: {translation}");
+Console.WriteLine($"Сообщение: {translation}");
 response.Clear();
-// имитируем долговременную работу, чтобы одновременно несколько клиентов обрабатывались
-await Task.Delay(2000);
 
 
 // отправляем маркер завершения подключения - END

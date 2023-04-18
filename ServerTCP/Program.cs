@@ -37,25 +37,39 @@ async Task ProcessClientAsync(TcpClient tcpClient)
     };
     var stream = tcpClient.GetStream();
     // буфер для входящих данных
-    var response = new List<byte>();
     int bytesRead = 10;
     while (true)
     {
+        var initResponse = new List<byte>();
+
         // считываем данные до конечного символа
-        while ((bytesRead = stream.ReadByte()) != '\n')
+        while (initResponse.Count <= 4)
         {
             // добавляем в буфер
-            response.Add((byte)bytesRead);
+            initResponse.Add((byte)(bytesRead = stream.ReadByte()));
         }
+
+        var respLenght = (int)initResponse[2] + (int)initResponse[3];
+
+        var response = new List<byte>();// переделать в массив
+
+        while (response.Count <= respLenght)
+        {
+            response.Add((byte)(bytesRead = stream.ReadByte()));
+        }
+
+
         var word = Encoding.UTF8.GetString(response.ToArray());
 
         // если прислан маркер окончания взаимодействия,
         // выходим из цикла и завершаем взаимодействие с клиентом
         if (word == "END") break;
 
+        Console.WriteLine($"Расчетная длина текста:" + respLenght);
+
         Console.WriteLine($"Размер водного пакета:" + word.Length);
 
-        await stream.WriteAsync(Encoding.UTF8.GetBytes("э ты, не пиши сюда больше"));
+        await stream.WriteAsync(Encoding.UTF8.GetBytes("получен ответ"));
         response.Clear();
     }
     tcpClient.Close();

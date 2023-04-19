@@ -28,13 +28,7 @@ finally
 // обрабатываем клиент
 async Task ProcessClientAsync(TcpClient tcpClient)
 {
-    // условный словарь
-    var words = new Dictionary<string, string>()
-    {
-        {"red", "красный" },
-        {"blue", "синий" },
-        {"green", "зеленый" },
-    };
+
     var stream = tcpClient.GetStream();
     // буфер для входящих данных
     int bytesRead = 10;

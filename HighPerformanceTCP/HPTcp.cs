@@ -10,14 +10,13 @@ public class HPTcp
     //static string ServerPath = "37.192.37.60";
     static int ServerPort = 8091;
 
-    public static async Task<Stream> ClientConnectAsync()
+    public static async Task<TcpClient> ClientConnectAsync()
     {
         TcpClient tcpClient = new TcpClient();
         //await tcpClient.ConnectAsync("127.0.0.1", 8888);
         await tcpClient.ConnectAsync(ServerPath, ServerPort);
         
-        var stream = tcpClient.GetStream();
-        return stream;
+        return tcpClient;
     }
 
     public static async Task<byte[]> SendMessageAsync(byte commandType, string message, Stream stream)
@@ -37,8 +36,9 @@ public class HPTcp
         return mesageData;
     }
 
-    public static async Task ClientDisconnectAsync()
+    public static void ClientDisconnect(TcpClient tcpClient)
     {
+        tcpClient.Close();
     }
 
     public static async Task<string> GetMessageAsync(Stream stream)

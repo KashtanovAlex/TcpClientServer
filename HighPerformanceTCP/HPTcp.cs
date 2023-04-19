@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net.Sockets;
 using System.Text;
 
@@ -16,19 +17,24 @@ public class HPTcp
         await tcpClient.ConnectAsync(ServerPath, ServerPort);
         
         var stream = tcpClient.GetStream();
-        await SendMessageAsync(Convert.ToByte(0x01), "salam", stream);
         return stream;
     }
 
     public static async Task<byte[]> SendMessageAsync(byte commandType, string message, Stream stream)
     {
-        //var byteLenght = BitConverter.GetBytes(6 + message.Length);
-        var byteLenght = BitConverter.GetBytes(6);
-        byte[] data = new byte[] { Convert.ToByte(0x00), Convert.ToByte(0x03), byteLenght[3], byteLenght[2], byteLenght[1], byteLenght[0] };
-        //data.Concat(Encoding.UTF8.GetBytes(message));
-        await stream.WriteAsync(data.ToArray());
+        var byteLenght = BitConverter.GetBytes(6 + message.Length);
+        byte[] data = new byte[6];
+        data[0] = Convert.ToByte(0x00);
+        data[1] = commandType;
+        data[2] = byteLenght[3];
+        data[3] = byteLenght[2];
+        data[4] = byteLenght[1];
+        data[5] = byteLenght[0];
 
-        return data;
+        var mesageData = data.Concat(Encoding.UTF8.GetBytes(message + '\0')).ToArray();
+        await stream.WriteAsync(mesageData);
+
+        return mesageData;
     }
 
     public static async Task ClientDisconnectAsync()

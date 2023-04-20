@@ -30,7 +30,7 @@ public class HPTcp
         data[4] = byteLenght[1];
         data[5] = byteLenght[0];
 
-        var mesageData = data.Concat(Encoding.UTF8.GetBytes(message + '\0')).ToArray();
+        var mesageData = data;//data.Concat(Encoding.UTF8.GetBytes(message + '\0')).ToArray();
         await stream.WriteAsync(mesageData);
 
         return mesageData;
@@ -62,6 +62,7 @@ public class HPTcp
         {
             responseJson.AddAfter(responseJson.Last, (byte)(stream.ReadByte()));
         }
+        var a = Encoding.UTF8.GetString(responseJson.ToArray());
         return Encoding.UTF8.GetString(responseJson.ToArray());
 
     }

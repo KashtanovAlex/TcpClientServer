@@ -55,13 +55,18 @@ public class HPTcp
         if (messageLenght == 6)
             return "";
 
-        var responseJson = new LinkedList<byte>();
-        responseJson.AddFirst((byte)(stream.ReadByte()));
+        //var responseJson = new LinkedList<byte>();
+        //responseJson.AddFirst((byte)(stream.ReadByte()));
 
-        while (responseJson.Count() < messageLenght)
-            responseJson.AddAfter(responseJson.Last, (byte)(stream.ReadByte()));
+        var response = new byte[messageLenght];
 
-        return Encoding.UTF8.GetString(responseJson.ToArray());
+        await stream.ReadAsync(response);
+
+
+        //while (responseJson.Count() < messageLenght)
+          //  responseJson.AddAfter(responseJson.Last, (byte)(stream.ReadAsync()));
+
+        return Encoding.UTF8.GetString(response.ToArray());
 
     }
 }

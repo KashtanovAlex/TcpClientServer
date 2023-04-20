@@ -19,7 +19,7 @@ var stream = tcpClient.GetStream();
 for (int i = 0; i < 100; i++)
 {
     await HPTcp.SendMessageAsync(Convert.ToByte(3), "", stream);
-    var translation = await HPTcp.GetMessageAsync(stream);
+    await HPTcp.GetMessageAsync(stream);
 }
 
 stopwatch.Stop();

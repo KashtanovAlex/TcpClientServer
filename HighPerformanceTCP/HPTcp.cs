@@ -6,9 +6,9 @@ using System.Text;
 namespace HighPerformanceTCP;
 public class HPTcp
 {
-    //static string ServerPath = "172.16.172.212";
+    static string ServerPath = "172.16.172.212";
     //static string ServerPath = "37.192.37.60";
-    static string ServerPath = "127.0.0.1";
+    //static string ServerPath = "127.0.0.1";
     static int ServerPort = 8091;
     static int HeaderLenght = 6;
 
@@ -33,7 +33,7 @@ public class HPTcp
         data[4] = byteLenght[1];
         data[5] = byteLenght[0];
 
-        var mesageData = data;//data.Concat(Encoding.UTF8.GetBytes(message + '\0')).ToArray();
+        var mesageData = data.Concat(Encoding.UTF8.GetBytes(message + '\0')).ToArray();
         await stream.WriteAsync(mesageData);
 
         return mesageData;
@@ -44,16 +44,14 @@ public class HPTcp
         tcpClient.Close();
     }
 
-    public static async Task<string> GetMessageAsync(Stream stream)
+    public async static Task<string> GetMessageAsync(Stream stream)
     {
         var responseHeader = new byte[HeaderLenght];
-
         await stream.ReadAsync(responseHeader);
-
 
         var messageLenght = responseHeader[5] + (responseHeader[4] * 16) + (responseHeader[3] * 256) + (responseHeader[2] * 4096);
 
-        if (messageLenght == 6)
+        if (messageLenght == HeaderLenght)
             return "";
 
 

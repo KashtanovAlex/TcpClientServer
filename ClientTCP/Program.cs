@@ -9,22 +9,26 @@ var word = "salam";
 Console.WriteLine("Длина сообщения = " + word.Length);
 
 
-Stopwatch stopwatch = new Stopwatch();
-stopwatch.Start();
+//Stopwatch stopwatch = new Stopwatch();
+//stopwatch.Start();
+var before = DateTime.UtcNow;
 
 
 var tcpClient = await HPTcp.ClientConnectAsync();
 var stream = tcpClient.GetStream();
 
-for (var i = 0; i < 100; i++)
+//for (var i = 0; i < 100; i++)
 {
     await HPTcp.SendMessageAsync(Convert.ToByte(3), "", stream);
     await HPTcp.GetMessageAsync(stream);
 }
 
-stopwatch.Stop();
+//stopwatch.Stop();
 
 HPTcp.ClientDisconnect(tcpClient);
 
-Console.WriteLine($"Время работы {stopwatch.ElapsedMilliseconds}");
+//Console.WriteLine($"Время работы {stopwatch.ElapsedMilliseconds}");
+
+Console.WriteLine($"Время работы {DateTime.UtcNow - before}");
+
 Console.WriteLine($"Сообщение: ");

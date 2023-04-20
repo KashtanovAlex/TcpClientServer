@@ -47,16 +47,15 @@ public class HPTcp
     public static async Task<string> GetMessageAsync(Stream stream)
     {
         var responseHeader = new byte[HeaderLenght];
-        for (int i =0; i < HeaderLenght; i++)
-            responseHeader[i] = (byte)(stream.ReadByte());
+
+        await stream.ReadAsync(responseHeader);
+
 
         var messageLenght = responseHeader[5] + (responseHeader[4] * 16) + (responseHeader[3] * 256) + (responseHeader[2] * 4096);
 
         if (messageLenght == 6)
             return "";
 
-        //var responseJson = new LinkedList<byte>();
-        //responseJson.AddFirst((byte)(stream.ReadByte()));
 
         var response = new byte[messageLenght];
 

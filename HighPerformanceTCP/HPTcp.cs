@@ -6,9 +6,12 @@ using System.Text;
 namespace HighPerformanceTCP;
 public class HPTcp
 {
-    static string ServerPath = "172.16.172.212";
+    //static string ServerPath = "172.16.172.212";
     //static string ServerPath = "37.192.37.60";
+    static string ServerPath = "127.0.0.1";
     static int ServerPort = 8091;
+    static int HeaderLenght = 6;
+
 
     public static async Task<TcpClient> ClientConnectAsync()
     {
@@ -21,8 +24,8 @@ public class HPTcp
 
     public static async Task<byte[]> SendMessageAsync(byte commandType, string message, Stream stream)
     {
-        var byteLenght = BitConverter.GetBytes(6 + message.Length);
-        byte[] data = new byte[6];
+        var byteLenght = BitConverter.GetBytes(HeaderLenght + message.Length);
+        byte[] data = new byte[HeaderLenght];
         data[0] = Convert.ToByte(0x00);
         data[1] = commandType;
         data[2] = byteLenght[3];
@@ -43,12 +46,9 @@ public class HPTcp
 
     public static async Task<string> GetMessageAsync(Stream stream)
     {
-        // получение заголовка
-        var responseHeader = new byte[6];
-        for (int i =0; responseHeader.Count() <= 5; i++)
-        {
+        var responseHeader = new byte[HeaderLenght];
+        for (int i =0; i < HeaderLenght; i++)
             responseHeader[i] = (byte)(stream.ReadByte());
-        }
 
         var messageLenght = responseHeader[5] + (responseHeader[4] * 16) + (responseHeader[3] * 256) + (responseHeader[2] * 4096);
 
@@ -59,10 +59,8 @@ public class HPTcp
         responseJson.AddFirst((byte)(stream.ReadByte()));
 
         while (responseJson.Count() < messageLenght)
-        {
             responseJson.AddAfter(responseJson.Last, (byte)(stream.ReadByte()));
-        }
-        var a = Encoding.UTF8.GetString(responseJson.ToArray());
+
         return Encoding.UTF8.GetString(responseJson.ToArray());
 
     }

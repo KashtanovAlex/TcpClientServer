@@ -16,11 +16,10 @@ stopwatch.Start();
 var tcpClient = await HPTcp.ClientConnectAsync();
 var stream = tcpClient.GetStream();
 
-for (int i = 0; i < 10; i++)
+for (int i = 0; i < 100; i++)
 {
-    var a = await HPTcp.SendMessageAsync(Convert.ToByte(3), "", stream);
+    await HPTcp.SendMessageAsync(Convert.ToByte(3), "", stream);
     var translation = await HPTcp.GetMessageAsync(stream);
-    Console.WriteLine(translation);
 }
 
 stopwatch.Stop();
